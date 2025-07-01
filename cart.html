@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <link rel="stylesheet" href="cart.css">
+    <style>
+        .hidden {
+            display: none;
+        }
+        .cart-item {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .delete-btn {
+            background: none;
+            border: none;
+            color: red;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        nav {
+            padding: 1rem;
+            background-color: #f0f0f0;
+            margin-bottom: 2rem;
+        }
+        nav a {
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <h1>My Milk Farm - Cart</h1>
+        <a href="index.html">Back to Products</a>
+    </nav>
+
+    <section class="cart">
+        <h2>Your Cart</h2>
+        <div id="cart-items"></div>
+        <p>Total Amount: ₹<span id="total-amount "></span></p>
+
+<script>
+    document.getElementById('total-amount').textContent = localStorage.getItem('myMilkFarmTotalAmount') || '0.00';
+</script>
+
+        <button onclick="checkout()">Proceed to Payment</button>
+    </section>
+
+    <section id="checkout-section" class="hidden">
+        <h2>Enter Address & Payment Details</h2>
+        <form id="checkout-form">
+            <label>Name:</label>
+            <input type="text" id="name" required>
+
+            <label>Address:</label>
+            <input type="text" id="address" required>
+
+            <label>Payment Method:</label>
+            <select id="payment-method">
+                <option value="credit">Credit Card</option>
+                <option value="debit">Debit Card</option>
+                <option value="upi">UPI</option>
+            </select>
+
+            <button type="submit">Pay Now</button>
+        </form>
+    </section>
+
+    <script>
+        let cartItems = JSON.parse(localStorage.getItem('myMilkFarmCart')) || [];
+        const cartContainer = document.getElementById('cart-items');
+        const totalPriceElement = document.getElementById('total-price');
+        const checkoutSection = document.getElementById('checkout-section');
+
+        function displayCart() {
+            cartContainer.innerHTML = "";
+            let total = 0;
+
+            if (cartItems.length === 0) {
+                cartContainer.innerHTML = "<p>Your cart is empty.</p>";
+                totalPriceElement.textContent = "0";
+                return;
+            }
+
+            cartItems.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.classList.add('cart-item');
+
+                div.innerHTML = `
+                    <span><strong>${item.name}</strong> - ₹${item.price}</span>
+                    <button class="delete-btn" onclick="removeItem(${index})">🗑️</button>
+                `;
+
+                cartContainer.appendChild(div);
+                total += item.price;
+            });
+
+            totalPriceElement.textContent = total;
+        }
+
+        function removeItem(index) {
+            cartItems.splice(index, 1);
+            localStorage.setItem('myMilkFarmCart', JSON.stringify(cartItems));
+            displayCart();
+        }
+
+        function checkout() {
+            if (cartItems.length === 0) {
+                alert("Your cart is empty.");
+                return;
+            }
+            checkoutSection.classList.remove('hidden');
+            window.scrollTo({
+                top: checkoutSection.offsetTop,
+                behavior: 'smooth'
+            });
+        }
+
+        document.getElementById('checkout-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            alert("Payment Successful! Thank you for your order.");
+            alert("must and should give the review of the order");
+            localStorage.removeItem('myMilkFarmCart');
+            window.location.href = "review.html";
+        });
+
+        displayCart();
+    </script>
+</body>
+</html>

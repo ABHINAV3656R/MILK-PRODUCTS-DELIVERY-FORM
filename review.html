@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Review</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: linear-gradient(to right, #280003, #07fb9e);
+            color: white;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            max-width: 400px;
+            background: #459bd4;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(191, 57, 57, 0.2);
+        }
+        .stars {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin: 10px 0;
+        }
+        .stars span {
+            font-size: 24px;
+            cursor: pointer;
+            color: gray;
+        }
+        .stars span.selected {
+            color: gold;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #222;
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: white;
+            z-index: 999;
+        }
+        .popup button {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background: #004e92;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .chart-container {
+            width: 400px;
+            margin: 20px auto;
+            background: #222;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Product Review</h2>
+        <div class="stars" id="stars">
+            <span data-value="1">&#9733;</span>
+            <span data-value="2">&#9733;</span>
+            <span data-value="3">&#9733;</span>
+            <span data-value="4">&#9733;</span>
+            <span data-value="5">&#9733;</span>
+        </div>
+        <button id="submitReview">Submit Review</button>
+    </div>
+
+    <div class="popup" id="popup">
+        <p>Thank you for your review! Visit us again next time.</p>
+        <button onclick="closePopup()">OK</button>
+    </div>
+
+    <div class="chart-container">
+        <canvas id="ratingChart"></canvas>
+    </div>
+
+    <script>
+        const stars = document.querySelectorAll(".stars span");
+        let selectedRating = 0;
+        let ratings = [0, 0, 0, 0, 0];
+        let chart;
+
+        stars.forEach(star => {
+            star.addEventListener("click", () => {
+                selectedRating = star.getAttribute("data-value");
+                stars.forEach(s => s.classList.remove("selected"));
+                for (let i = 0; i < selectedRating; i++) {
+                    stars[i].classList.add("selected");
+                }
+            });
+        });
+
+        document.getElementById("submitReview").addEventListener("click", () => {
+            if (selectedRating > 0) {
+                ratings[selectedRating - 1]++;
+                updateChart();
+                document.getElementById("popup").style.display = "block";
+            } else {
+                alert("Please select a rating before submitting.");
+            }
+        });
+
+        function closePopup() {
+            window.location.href = "index.html"; // Redirect to homepage
+        }
+
+        function updateChart() {
+            if (chart) {
+                chart.destroy();
+            }
+            const ctx = document.getElementById("ratingChart").getContext("2d");
+            chart = new Chart(ctx, {
+                type: "bar",
+                data: {
+                    labels: ["1 Star", "2 Stars", "3 Stars", "4 Stars", "5 Stars"],
+                    datasets: [{
+                        label: "Ratings",
+                        data: ratings,
+                        backgroundColor: ["#ff0000", "#ff8000", "#ffff00", "#80ff00", "#00ff00"],
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            stepSize: 1
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

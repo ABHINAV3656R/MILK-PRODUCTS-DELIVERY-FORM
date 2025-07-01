@@ -1,0 +1,250 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Milk Farm</title>
+<link rel="stylesheet" href="index.css">
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+<script src="https://kit.fontawesome.com/6244267947.js" crossorigin="anonymous"></script>
+</head>
+<script>
+let cart = [];
+let totalAmount = 0;
+
+function updateCartDisplay() {
+const cartDisplay = document.getElementById('cart-display');
+
+if (cart.length === 0) {
+cartDisplay.textContent = "View Cart (0)";
+return;
+}
+
+// Build "Item × Quantity" display string
+const itemSummary = cart.map(item => `${item.name} × ${item.quantity}`).join(", ");
+cartDisplay.textContent = `View Cart (${itemSummary})`;
+}
+
+function addToCart(itemName, price) {
+const existingItem = cart.find(item => item.name === itemName);
+
+if (existingItem) {
+existingItem.quantity += 1;
+} else {
+cart.push({ name: itemName, price: price, quantity: 1 });
+}
+
+totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+localStorage.setItem('myMilkFarmCart', JSON.stringify(cart));
+localStorage.setItem('myMilkFarmTotalAmount', totalAmount.toFixed(2));
+
+updateCartDisplay();
+}
+
+window.onload = function () {
+const storedCart = localStorage.getItem('myMilkFarmCart');
+const storedTotal = localStorage.getItem('myMilkFarmTotalAmount');
+
+if (storedCart) {
+cart = JSON.parse(storedCart);
+totalAmount = storedTotal ? parseFloat(storedTotal) : 0;
+}
+
+updateCartDisplay();
+}
+</script>
+
+
+
+
+
+<style>
+button {
+background-color: #28a745; /* Green background */
+color: white;              /* White text */
+padding: 10px 20px;        /* Spacing */
+font-size: 16px;           /* Font size */
+border: none;              /* Remove border */
+border-radius: 8px;        /* Rounded corners */
+cursor: pointer;           /* Pointer on hover */
+transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+background-color: #218838; /* Darker green on hover */
+transform: scale(1.05);    /* Slight zoom on hover */
+}
+
+button:active {
+background-color: #1e7e34; /* Even darker green when clicked */
+}
+
+</style>
+
+<body>
+<nav id="navbar">
+<input type="checkbox" id="check">
+<label for="check" class="checkbtn">
+<i class="fas fa-bars"></i>
+</label>
+<img class="logo-image" src="my-farm.png" alt="logo-image">
+<ul>
+<li class="item"><a href="#home">Home</a></li>
+<li class="item"><a href="Login.html">Login</a></li>
+<li class="item"><a href="SignUp.html">Sign Up</a></li>
+<li class="item"><a href="Contact.html">Contact Us</a></li>
+<li class="item"><a href="about.html">About Us</a></li>
+<li class="item"><a href="review.html">REVIEW</a></li>
+<li class="cart-btn">
+<a href="cart.html" id="cart-display">View Cart (0)</a>
+</li>
+
+</ul>
+</nav>
+<!--Home sections-->
+<section id="home" class="home">
+<div class="text-sec">
+<h1>DISCOVER THE PUREST TASTE OF NATURE</h1>
+<p>Experience the joy of farm-fresh milk delivered right to your doorstep.Welcome to My Milk Farm, where
+nature's bounty comes to life in every drop of milk.Start your day with
+the purest essence of nature.From our happy and healthy cows to your breakfast table, we ensure only the
+best reaches your family.</p>
+<button class="btn"><a href="Address.html">Order Now</a></button>
+
+</div>
+
+<img class="cow" src="cute_cow.png" alt="">
+
+
+</section>
+
+
+<!--delivery-process sections-->
+<section class="delivery-process">
+<div class="milk">
+<img class="milk-img" src="fresh milk.png" alt="ALL Milk" height="500">
+<h3>Fresh Milk</h3>
+<br>
+<p>Enjoy our carefully collected</p>
+<p>and quality-checked fresh milk.</p>
+</div>
+
+<div class="curd">
+<img class="curd-img" src="curd-pouch.png" alt="card" height="160">
+<h3>Fresh Curd</h3>
+<br>
+<p>Savor our healthy and</p>
+<p>Tasty cream</h3>
+<br>
+</div>
+<div class ="ICe-cream" src="ice-cream.jpg" alt ="" height="160">
+<img class ="Ice-Cream" src="" alt=""height="160">
+<h3>ICE-CREAM</h3>
+<br>
+<p>Ice cream provides energy, boosts mood, strengthens bones</p>
+<p>offers essential nutrients when consumed in moderation. </p>
+</div>
+<div class="delivry-girl">
+<img class="delivery-girl-img" src="delivery-pic.png" alt="" height="">
+<h3>Safe Delivery</h3>
+<br>
+<p>Our safe delivery process for</p>
+<p>a hygienic product at your door.</p>
+
+</div>
+
+
+</section>
+
+
+<!--Product sections-->
+<section class="product">
+
+<h2>Milk Product</h2>
+<section class="product-container">
+<div class="all-milk product-item">
+<img style="background-position: center ;" class="all-milk-img" src="all-milk-img.png" alt="Fresh Milk"
+height="400">
+<hr>
+<h3>All Milk</h3>
+<br>
+<p>Indulge in the rich and creamy taste of our All Milk. It's perfect for drinking, cooking, and making
+your favorite dairy treats. Sourced from happy cows, it's the purest milk you can find.</p>
+<p> price :55</p>
+<button onclick ="addToCart('Fresh Milk',55)">Add to Cart</button>
+</div>
+
+<div class="low-fat-milk product-item">
+<img class="low-fat-img" src="skim milk.jpg" alt="low Fat milk" height="200">
+<hr>
+<h3>Low Fat Milk</h3>
+<br>
+<p>Looking for a healthier option? Try our Low Fat Milk, a delicious choice for those who prefer a
+lighter milk without compromising on taste. It's a great option for your daily nutritional needs.
+</p>
+<p> price :60</p>
+<button onclick="addToCart('low fat milk',60)">Add to Cart</button>
+</div>
+
+<div class="other-milk product-item">
+<img class="other-milk-img" src="other milk.jpg" alt="other milk" height="200">
+<hr>
+<h3>Other Milk</h3>
+<br>
+<p>Explore our range of Other Milk varieties, including flavored milk and more specialty options. Each
+one is crafted with care to offer a unique and delightful milk experience.</p>
+<p>price :70</p>
+<button onclick="addToCart('orther milk',55)">Add to Cart</button>
+</div>
+
+<div class="all-curd product-item">
+<img class="all-curd-img" src="all curd img.png" alt="CURD" height="200">
+<hr>
+<h3>All Curd</h3>
+<br>
+<p>Experience the smooth and velvety texture of our All Curd. Made using traditional methods, our curd
+is rich in probiotics and adds a delightful tang to your meals and snacks.</p>
+<p> price :50</p>
+<button onclick="addToCart('CURD',55)">Add to Cart</button>
+</div>
+</section>
+</section>
+<hr>
+<!--Guaranteed sections-->
+<section class="guaranteed-section">
+
+<h1>We Guaranteed You</h1>
+
+<div class="watch">
+<img src="hand watch.png" alt="watch image" height="230">
+<p>On-time every time guaranteed</p>
+</div>
+
+<div class="guaranteed">
+<img src="guaranteed.png" alt="guaranteed-logo img" height="150">
+<p style="margin-top: 20px;">Freshness you can trust on my farm</p>
+</div>
+
+</section>
+
+
+<!--Contact Us sections-->
+<section class="section-contact-us">
+<button class="contact-btn"><a href="Contact.html">Contact Us</a></button>
+
+<div class="social-media">
+<a class="social" href="#"><i class="fa fa-linkedin-square"></i></a>
+<a class="social" href="#"><i class="fa fa-twitter"></i></a>
+<a class="social" href="#"><i class="fa-brands fa-square-instagram"></i></i></a>
+</div>
+<div class="copyright">
+<p>Hemanjaneyulu@2025 My Milk Farm</p>
+</div>
+</section>
+</body>
+
+</html>
